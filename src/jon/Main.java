@@ -33,6 +33,8 @@ public class Main extends Application {
 	public static JSONArray components;
 	public static JSONObject mainObj;
 	
+	public Label message;
+	
 	public TextField ServersControlVersion;
 	public TextField VSimControlVersion;
 	public TextField AtmelVersion;
@@ -41,10 +43,15 @@ public class Main extends Application {
 	public TextField LogServiceVersion;
 	public TextField APConfigurationVersion;
 	public TextField OSVersion;
+	public TextField OSBaseVersion;
+	public TextField OSFilePath;
 	
 	public TextField PackageVersion;
 	public TextField PackageName;
 	public TextField ActionString;
+	public TextField BucketId;
+	public TextField BucketKey;
+	
 	
 	public TextField CaptivePortalVersion;
 	public TextField GUIConfigurationVersion;
@@ -53,6 +60,10 @@ public class Main extends Application {
 	public TextField WebServerVersion;
 	
 	
+	
+	public TextField[] mandatoryFields;
+	public TextField[] nonMandatoryFields;
+	public TextField[] packageInfoFields;
 	
     public static void main(String[] args) {
         launch(args);
@@ -71,6 +82,9 @@ public class Main extends Application {
     	LogServiceVersion = new TextField("1.1.2");
     	APConfigurationVersion = new TextField("1.2.6");
     	OSVersion = new TextField();
+    	OSBaseVersion = new TextField();
+    	OSFilePath = new TextField();
+    	
     	CaptivePortalVersion = new TextField();
     	GUIConfigurationVersion = new TextField();
     	TelephonyDBVersion = new TextField();
@@ -80,12 +94,182 @@ public class Main extends Application {
     	PackageVersion = new TextField("2.9.0");
     	PackageName = new TextField("2.9.0");
     	ActionString = new TextField("4");
+    	BucketId = new TextField("TBD");
+    	BucketKey = new TextField("TBD");
+    	
+    	mandatoryFields = new TextField [] {ServersControlVersion,VSimControlVersion,AtmelVersion,Server4GVersion,GUIVersion,LogServiceVersion,
+    			APConfigurationVersion,OSVersion,OSBaseVersion,OSFilePath};
+    	nonMandatoryFields = new TextField [] {CaptivePortalVersion,GUIConfigurationVersion,TelephonyDBVersion,APNVersion, WebServerVersion};
+    	packageInfoFields = new TextField[] { PackageVersion, PackageName, ActionString, BucketId, BucketKey};
+    	
+    	message = new Label(" Okay");
     }
     
     @Override
     public void start(Stage primaryStage) {
-    	init();
-        primaryStage.setTitle("Simgo Package Generator");
+    	init(); 
+        setGrid(primaryStage);    
+        primaryStage.show();
+    }
+	
+	
+	
+	public void generate() throws IOException{
+	
+		if (!checkFields())
+			message.setText("Error");
+		else {
+			message.setText(" Okay");
+			createMandatoryJson();
+			try(FileWriter file = new FileWriter("components.json")) { 	
+				file.write(mainObj.toString(1));
+				System.out.println("Success");
+			}
+			catch (Exception o) {
+				System.out.println("error");
+			}
+			components = new JSONArray();
+	    	mainObj = new JSONObject();
+		}
+
+	}
+	
+	public void generateOS() throws IOException{
+		
+		if (!checkOSFields()) 
+			message.setText("Error");
+		else {
+			message.setText(" Okay");
+			createOS();
+			try(FileWriter file = new FileWriter("jon_package.json")) { 	
+				file.write(mainObj.toString(1));
+				System.out.println("Success");
+			}
+			catch (Exception o) {
+				System.out.println("error");
+			}
+			components = new JSONArray();
+	    	mainObj = new JSONObject();
+		}
+
+	}
+	private void createMandatoryJson() {
+		
+		try {
+		
+			mainObj.put("package version", PackageVersion.getText());
+			mainObj.put("version", PackageVersion.getText());
+			mainObj.put("name", PackageName.getText());
+			mainObj.put("action", Integer.parseInt(ActionString.getText()));
+			mainObj.put("bucket_id", BucketId.getText());
+			mainObj.put("bucket_key", BucketKey.getText());
+			mainObj.put("components", components);
+			addObject(0, "ServersControl", ServersControlVersion.getText() , "vph-components/servers-control/ServersService-v", "Server Service", ".apk");
+			addObject(1, "VSimControl", VSimControlVersion.getText(),"vph-components/vsim-control/VSimService-v", "Vsim services", ".apk");
+			addObject(2, "Atmel", AtmelVersion.getText(),  "vph-components/atmel/VSim-v", "Atmel", ".sgo");
+			addObject(3, "Server 4G", Server4GVersion.getText(),  "vph-components/servers4G/Servers4G-v", "Server 4G", ".apk");
+			addObject(4, "GUI", GUIVersion.getText(), "vph-components/gui/gui-v", "GUI", ".apk");
+			addObject(5, "Log Service", LogServiceVersion.getText(), "vph-components/log-service/LogService-v", "Log Service", ".apk");
+			addObject(6, "AP-Configuration", APConfigurationVersion.getText(), "vph-components/config/config-v", "Configurations", ".json");
+			addObject(7, "OS", OSVersion.getText(), "vph-components/OS/" + OSFilePath.getText(), "OS", ".zip", OSBaseVersion.getText() );  /////////////////////////////////
+			
+			if (!CaptivePortalVersion.getText().trim().isEmpty())
+				addObject(100, "Captive Portal", CaptivePortalVersion.getText(), "vph-components/captive-portal/mifi-v", "Captive Portal", ".zip");
+			if (!GUIConfigurationVersion.getText().trim().isEmpty())
+				addObject(101, "Gui-Confiogurations", GUIConfigurationVersion.getText(), "gui/", "Gui-Configuration", ".zip");
+			if (!TelephonyDBVersion.getText().trim().isEmpty())
+				addObject(102, "Telephony DB", TelephonyDBVersion.getText(), "vph-components/", "", ".db");
+			if (!APNVersion.getText().trim().isEmpty())
+				addObject(103, "APN", APNVersion.getText(), "vph-components/", "", ".xml");
+			if (!WebServerVersion.getText().trim().isEmpty())
+				addObject(104, "WEB SERVER", WebServerVersion.getText(), "vph-components/web-server/WebServer-v", "WEB SERVER", ".apk");
+		}
+		catch (JSONException ex) {
+			System.out.println("error");
+		}
+		
+	}
+	private void createOS() {
+		
+		try {
+		
+			mainObj.put("package version", PackageVersion.getText());
+			mainObj.put("version", PackageVersion.getText());
+			mainObj.put("name", PackageName.getText());
+			mainObj.put("action", Integer.parseInt(ActionString.getText()));
+			mainObj.put("bucket_id", BucketId.getText());
+			mainObj.put("bucket_key", BucketKey.getText());
+			mainObj.put("components", components);
+			addObject(7, "OS", OSVersion.getText(), "vph-components/OS/" + OSFilePath.getText(), "OS", ".zip", OSBaseVersion.getText() );  /////////////////////////////////
+			
+		}
+		catch (JSONException ex) {
+			System.out.println("error");
+		}
+		
+	}
+	private boolean checkFields() {
+		
+		for(TextField text : mandatoryFields) {
+			if ((text.getText().indexOf(',') >= 0) | (text.getText().isEmpty()))
+				return false;
+		}
+		for(TextField text : nonMandatoryFields) {
+			if (text.getText().indexOf(',') >= 0)
+				return false;
+		}
+		for(TextField text : packageInfoFields) {
+			if ((text.getText().indexOf(',') >= 0) | (text.getText().isEmpty()) )
+				return false;
+		}
+		return true;
+	}
+	private boolean checkOSFields() {
+		TextField[] OSFields = new TextField[] {OSVersion,OSBaseVersion,OSFilePath};
+		for(TextField text : OSFields) {
+			if ((text.getText().indexOf(',') >= 0) | (text.getText().isEmpty()))
+				return false;
+		}
+		for(TextField text : packageInfoFields) {
+			if ((text.getText().indexOf(',') >= 0) | (text.getText().isEmpty()) )
+				return false;
+		}
+		return true;
+	}
+	
+	private static void addObject(int id, String name, String component_version, String filePath, String description, String type) throws JSONException {
+		//System.out.println(name + " - enter component version: ");
+		//String component_version = reader.nextLine();
+		filePath = filePath + component_version + type;
+		JSONObject ob = new JSONObject();
+		ob.put("id", id);
+		ob.put("name",name);
+		ob.put("version", component_version);
+		ob.put("filepath", filePath);
+		ob.put("description", description);
+		
+		components.put(ob);
+		
+		
+	}
+	private static void addObject(int id, String name, String component_version, String filePath, String description, String type, String baseversion) throws JSONException {
+	//	System.out.println(name + " - enter component version: ");
+	//	String component_version = reader.nextLine();
+	//	filePath = filePath + component_version + type;
+		JSONObject ob = new JSONObject();
+		ob.put("id", id);
+		ob.put("name",name);
+		ob.put("version", component_version);
+		ob.put("filepath", filePath);
+		ob.put("description", description);
+		ob.put("base_version", baseversion);
+		components.put(ob);
+		
+		
+	}
+	
+	private void setGrid(Stage primaryStage) {
+		primaryStage.setTitle("Simgo Package Generator");
         Button btn = new Button();
         btn.setText("Generate JSON");
         btn.setOnAction(new EventHandler<ActionEvent>() {
@@ -99,21 +283,50 @@ public class Main extends Application {
 				}
             }
         });
+        Button btn2 = new Button();
+        btn2.setText("Clear All");
+        btn2.setOnAction(new EventHandler<ActionEvent>() {
+  
+            @Override
+            public void handle(ActionEvent event) {
+            	for(TextField text : mandatoryFields) {
+        			text.clear();
+        		}
+        		for(TextField text : nonMandatoryFields) {
+        			text.clear();
+        		}
+        		for(TextField text : packageInfoFields) {
+        			text.clear();
+        		}
+        		message.setText("clear");
+            }
+        });
         
-    //    StackPane root = new StackPane();
-    //    root.getChildren().add(btn);
-    //    primaryStage.setScene(new Scene(root, 300, 250));
+        Button btn3 = new Button();
+        btn3.setText("Generate OS");
+        btn3.setOnAction(new EventHandler<ActionEvent>() {
+  
+            @Override
+            public void handle(ActionEvent event) {
+            	try {
+					generateOS();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+            }
+        });
         
-        
-        GridPane mainGrid = new GridPane();
+		GridPane mainGrid = new GridPane();
         mainGrid.setAlignment(Pos.CENTER);
         mainGrid.setHgap(10);
         mainGrid.setVgap(10);
         mainGrid.setPadding(new Insets(25, 25, 25, 25));
 
-        mainGrid.add(btn, 1, 10);
-        
-        Scene scene = new Scene(mainGrid, 1100, 500);
+        mainGrid.add(btn, 1, 3);
+        mainGrid.add(btn3, 0, 3);
+        mainGrid.add(btn2, 2, 3);
+        mainGrid.add(message, 3, 3);
+        Scene scene = new Scene(mainGrid, 1200, 500);
         primaryStage.setScene(scene);
         
         // ------------------
@@ -176,6 +389,14 @@ public class Main extends Application {
         Label ActionStringLabel = new Label("Action:");
         left_grid.add(ActionStringLabel, 0, 3);
         left_grid.add(ActionString, 1, 3);
+        
+        Label BucketIdLabel = new Label("Bucket ID:");
+        left_grid.add(BucketIdLabel, 0, 4);
+        left_grid.add(BucketId, 1, 4);
+        
+        Label BucketKeyLabel = new Label("Bucket Key:");
+        left_grid.add(BucketKeyLabel, 0, 5);
+        left_grid.add(BucketKey, 1, 5);
         
         // -------------------
         
@@ -240,100 +461,18 @@ public class Main extends Application {
         grid.add(OSVersion, i, j);
         i = 0; j++;
         
+        Label OSBase = new Label("OS Base version:");
+        grid.add(OSBase, i, j);
+        i++;
+        grid.add(OSBaseVersion, i, j);
+        i = 0; j++;
         
-        primaryStage.show();
-    }
-	
-	
-	
-	public void generate() throws IOException{
-	
-		createMandatoryJson();
-		try(FileWriter file = new FileWriter("jon.json")) { 	
-			file.write(mainObj.toString(1));
-			System.out.println("Success");
-		}
-		catch (Exception o) {
-			System.out.println("error");
-		}
-		components = new JSONArray();
-    	mainObj = new JSONObject();
-
+        Label OSFilePathLabel = new Label("OS file path: (vph-components/OS/...)");
+        grid.add(OSFilePathLabel, i, j);
+        i++;
+        grid.add(OSFilePath, i, j);
+        i = 0; j++;
 	}
-	private void createMandatoryJson() {
-		//System.out.print("Enter package version: ");
-		//String package_version = reader.nextLine();
-		//System.out.print("Enter package name: ");
-		//String package_name = reader.nextLine();
-		String package_version = "2.9.0";
-		String package_name = package_version;
-		try {
-			
-			mainObj.put("package version", package_version);
-			mainObj.put("version", package_version);
-			mainObj.put("name", package_name);
-			mainObj.put("action", Integer.parseInt(ActionString.getText()));
-			mainObj.put("components", components);
-			addObject(0, "ServersControl", ServersControlVersion.getText() , "vph-components/servers-control/ServersService-v", "Server Service", ".apk");
-			addObject(1, "VSimControl", VSimControlVersion.getText(),"vph-components/vsim-control/VSimService-v", "Vsim services", ".apk");
-			addObject(2, "Atmel", AtmelVersion.getText(),  "vph-components/atmel/VSim-v", "Atmel", ".sgo");
-			addObject(3, "Server 4G", Server4GVersion.getText(),  "vph-components/servers4G/Servers4G-v", "Server 4G", ".apk");
-			//addObject(4, "WEB SERVER",  "vph-components/web-server/WebServer-v", "WEB SERVER", ".apk");
-			addObject(4, "GUI", GUIVersion.getText(), "vph-components/gui/gui-v", "GUI", ".apk");
-			addObject(5, "Log Service", LogServiceVersion.getText(), "vph-components/log-service/LogService-v", "Log Service", ".apk");
-			addObject(6, "AP-Configuration", APConfigurationVersion.getText(), "vph-components/config/config-v", "Configurations", ".json");
-			addObject(7, "OS", OSVersion.getText(), "vph-components/OS/Os-v", "OS", ".zip", "SIMGO_20170522103547_26140ab" );  /////////////////////////////////
-			
-			if (!CaptivePortalVersion.getText().trim().isEmpty())
-				addObject(100, "Captive Portal", CaptivePortalVersion.getText(), "vph-components/captive-portal/mifi-v", "Captive Portal", ".zip");
-			if (!GUIConfigurationVersion.getText().trim().isEmpty())
-				addObject(101, "Gui-Confiogurations", GUIConfigurationVersion.getText(), "gui/", "Gui-Configuration", ".zip");
-			if (!TelephonyDBVersion.getText().trim().isEmpty())
-				addObject(102, "Telephony DB", TelephonyDBVersion.getText(), "vph-components/", "", ".db");
-			if (!APNVersion.getText().trim().isEmpty())
-				addObject(103, "APN", APNVersion.getText(), "vph-components/", "", ".xml");
-			if (!WebServerVersion.getText().trim().isEmpty())
-				addObject(104, "Web Server", WebServerVersion.getText(), "vph-components/", "", ".apk");
-		}
-		catch (JSONException ex) {
-			System.out.println("error");
-		}
-		
-	}
-	
-	
-	private static void addObject(int id, String name, String component_version, String filePath, String description, String type) throws JSONException {
-		//System.out.println(name + " - enter component version: ");
-		//String component_version = reader.nextLine();
-		filePath = filePath + component_version + type;
-		JSONObject ob = new JSONObject();
-		ob.put("id", id);
-		ob.put("name",name);
-		ob.put("version", component_version);
-		ob.put("filepath", filePath);
-		ob.put("description", description);
-		
-		components.put(ob);
-		
-		
-	}
-	private static void addObject(int id, String name, String component_version, String filePath, String description, String type, String baseversion) throws JSONException {
-	//	System.out.println(name + " - enter component version: ");
-	//	String component_version = reader.nextLine();
-		filePath = filePath + component_version + type;
-		JSONObject ob = new JSONObject();
-		ob.put("id", id);
-		ob.put("name",name);
-		ob.put("version", component_version);
-		ob.put("filepath", filePath);
-		ob.put("description", description);
-		ob.put("base_version", baseversion);
-		components.put(ob);
-		
-		
-	}
-	
-	
 
 }
 
