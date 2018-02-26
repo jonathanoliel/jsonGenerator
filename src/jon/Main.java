@@ -1,13 +1,19 @@
 package jon;
 
+import java.awt.Desktop;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.Reader;
 import java.util.Scanner;
 
 import org.json.JSONObject;
 import org.json.JSONArray;
 import org.json.JSONException;
-
 
 import javafx.application.Application;
 import javafx.event.ActionEvent;
@@ -17,21 +23,28 @@ import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
+import javafx.stage.FileChooser;
 import javafx.stage.Stage;
- 
+import com.google.gson.Gson;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
+import com.google.gson.stream.JsonReader;
+
 public class Main extends Application {
 	
 	
 	public static Scanner reader; 
 	public static JSONArray components;
 	public static JSONObject mainObj;
+	public Gson gson = new Gson();
 	
 	public Label message;
 	
@@ -65,11 +78,17 @@ public class Main extends Application {
 	public TextField[] nonMandatoryFields;
 	public TextField[] packageInfoFields;
 	
+	public Button btn;
+    public Button btn2;
+    public Button btn3;
+
+	
     public static void main(String[] args) {
         launch(args);
     }
     
     public void init() {
+    	
     	reader = new Scanner(System.in); 
     	components = new JSONArray();
     	mainObj = new JSONObject();
@@ -103,12 +122,15 @@ public class Main extends Application {
     	packageInfoFields = new TextField[] { PackageVersion, PackageName, ActionString, BucketId, BucketKey};
     	
     	message = new Label(" Okay");
+    	btn = new Button();
+        btn2 = new Button();
+        btn3 = new Button();
     }
     
     @Override
     public void start(Stage primaryStage) {
     	init(); 
-        setGrid(primaryStage);    
+        setGrid(primaryStage);   
         primaryStage.show();
     }
 	
@@ -200,7 +222,7 @@ public class Main extends Application {
 			mainObj.put("bucket_id", BucketId.getText());
 			mainObj.put("bucket_key", BucketKey.getText());
 			mainObj.put("components", components);
-			addObject(7, "OS", OSVersion.getText(), "vph-components/OS/" + OSFilePath.getText(), "OS", ".zip", OSBaseVersion.getText() );  /////////////////////////////////
+			addObject(3, "OS", OSVersion.getText(), "vph-components/OS/" + OSFilePath.getText(), "OS", ".zip", OSBaseVersion.getText() );  /////////////////////////////////
 			
 		}
 		catch (JSONException ex) {
@@ -270,7 +292,8 @@ public class Main extends Application {
 	
 	private void setGrid(Stage primaryStage) {
 		primaryStage.setTitle("Simgo Package Generator");
-        Button btn = new Button();
+		FileChooser fileChooser = new FileChooser();
+        
         btn.setText("Generate JSON");
         btn.setOnAction(new EventHandler<ActionEvent>() {
  
@@ -283,7 +306,7 @@ public class Main extends Application {
 				}
             }
         });
-        Button btn2 = new Button();
+        
         btn2.setText("Clear All");
         btn2.setOnAction(new EventHandler<ActionEvent>() {
   
@@ -302,7 +325,6 @@ public class Main extends Application {
             }
         });
         
-        Button btn3 = new Button();
         btn3.setText("Generate OS");
         btn3.setOnAction(new EventHandler<ActionEvent>() {
   
@@ -316,12 +338,29 @@ public class Main extends Application {
             }
         });
         
+        Button openButton = new Button("Open JSON");
+        openButton.setOnAction( new EventHandler<ActionEvent>() {
+                    @Override
+                    public void handle(final ActionEvent e) {
+                        File file = fileChooser.showOpenDialog(primaryStage);
+                        
+                        if (file != null) {
+                            try {
+								openFile(new FileReader(file));
+							} catch (FileNotFoundException e1) {
+								e1.printStackTrace();
+							}
+                        }
+                    }
+                });
+        
 		GridPane mainGrid = new GridPane();
         mainGrid.setAlignment(Pos.CENTER);
         mainGrid.setHgap(10);
         mainGrid.setVgap(10);
         mainGrid.setPadding(new Insets(25, 25, 25, 25));
 
+        mainGrid.add(openButton, 0, 0);
         mainGrid.add(btn, 1, 3);
         mainGrid.add(btn3, 0, 3);
         mainGrid.add(btn2, 2, 3);
@@ -473,6 +512,76 @@ public class Main extends Application {
         grid.add(OSFilePath, i, j);
         i = 0; j++;
 	}
-
+	private void openFile(FileReader file) {
+    	
+		try {
+			JsonParser parser = new JsonParser();
+            JsonElement jsonElement = parser.parse(file);      
+            readJson(jsonElement.getAsJsonObject());
+        } catch (Exception ex ) {
+            
+        }
+    }
+	private void readJson(JsonObject obj) throws JSONException{
+		btn2.fire();
+		PackageVersion.setText(obj.get("package_version").getAsString());
+		PackageName.setText(obj.get("name").getAsString());
+		ActionString.setText(obj.get("action").getAsString());
+		if (obj.has("bucket_id"))
+			BucketId.setText(obj.get("bucket_id").getAsString());
+		if (obj.has("bucket_key"))
+			BucketKey.setText(obj.get("bucket_key").getAsString());
+		JsonArray array = obj.getAsJsonArray("components");
+		for (int i = 0; i < array.size(); i++) {
+			JsonElement el = array.get(i);
+			System.out.println( (el.getAsJsonObject()).get("id").getAsInt());
+			switch( (el.getAsJsonObject()).get("id").getAsInt() ) {
+			case(0):
+				ServersControlVersion.setText((el.getAsJsonObject()).get("version").getAsString());
+				break;
+			case(1):
+				VSimControlVersion.setText((el.getAsJsonObject()).get("version").getAsString());
+				break;
+			case(2):
+				AtmelVersion.setText((el.getAsJsonObject()).get("version").getAsString());
+				break;
+			case(3):
+				Server4GVersion.setText((el.getAsJsonObject()).get("version").getAsString());
+				break;
+			case(4):
+				GUIVersion.setText((el.getAsJsonObject()).get("version").getAsString());
+				break;
+			case(5):
+				LogServiceVersion.setText((el.getAsJsonObject()).get("version").getAsString());
+				break;
+			case(6):
+				APConfigurationVersion.setText((el.getAsJsonObject()).get("version").getAsString());
+				break;
+			case(7):
+				OSVersion.setText((el.getAsJsonObject()).get("version").getAsString());
+				OSBaseVersion.setText((el.getAsJsonObject()).get("base_version").getAsString());
+				OSFilePath.setText((el.getAsJsonObject()).get("filepath").getAsString().substring(0,19));
+				break;
+			case(100):
+				CaptivePortalVersion.setText((el.getAsJsonObject()).get("version").getAsString());
+				break;
+			case(101):
+				GUIConfigurationVersion.setText((el.getAsJsonObject()).get("version").getAsString());
+				break;
+			case(102):
+				TelephonyDBVersion.setText((el.getAsJsonObject()).get("version").getAsString());
+				break;
+			case(103):
+				APNVersion.setText((el.getAsJsonObject()).get("version").getAsString());
+				break;
+			case(104):
+				WebServerVersion.setText((el.getAsJsonObject()).get("version").getAsString());
+				break;
+			}
+		}
+	//	JSONArray componentsArr = new JSONArray(obj.getString("components"));
+		//ServersControlVersion.setText(componentsArr.getString(""));
+	}
+	
 }
 

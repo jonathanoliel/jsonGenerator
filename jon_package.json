@@ -1,0 +1,16 @@
+{
+ "bucket_id": "TBD",
+ "components": [{
+  "base_version": "SIMGO_20170522103547_26140ab",
+  "filepath": "vph-components/OS/vph-components/OS/O",
+  "name": "OS",
+  "description": "OS",
+  "id": 3,
+  "version": "SIMGO_20170522103547_26140ab_2.8.6"
+ }],
+ "bucket_key": "TBD",
+ "name": "RnD-2.8.8-base + new gui",
+ "action": 4,
+ "package version": "RnD-2.8.8-FindAir",
+ "version": "RnD-2.8.8-FindAir"
+}

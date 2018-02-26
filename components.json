@@ -1,0 +1,81 @@
+{
+ "bucket_id": "TBD",
+ "components": [
+  {
+   "filepath": "vph-components/servers-control/ServersService-v1.12.1.apk",
+   "name": "ServersControl",
+   "description": "Server Service",
+   "id": 0,
+   "version": "1.12.1"
+  },
+  {
+   "filepath": "vph-components/vsim-control/VSimService-v1.1.1.apk",
+   "name": "VSimControl",
+   "description": "Vsim services",
+   "id": 1,
+   "version": "1.1.1"
+  },
+  {
+   "filepath": "vph-components/atmel/VSim-v2.3.4.sgo",
+   "name": "Atmel",
+   "description": "Atmel",
+   "id": 2,
+   "version": "2.3.4"
+  },
+  {
+   "filepath": "vph-components/servers4G/Servers4G-v2.3.4.apk",
+   "name": "Server 4G",
+   "description": "Server 4G",
+   "id": 3,
+   "version": "2.3.4"
+  },
+  {
+   "filepath": "vph-components/gui/gui-v5.5.3.apk",
+   "name": "GUI",
+   "description": "GUI",
+   "id": 4,
+   "version": "5.5.3"
+  },
+  {
+   "filepath": "vph-components/log-service/LogService-v3.3.3.apk",
+   "name": "Log Service",
+   "description": "Log Service",
+   "id": 5,
+   "version": "3.3.3"
+  },
+  {
+   "filepath": "vph-components/config/config-v2.3.4.json",
+   "name": "AP-Configuration",
+   "description": "Configurations",
+   "id": 6,
+   "version": "2.3.4"
+  },
+  {
+   "base_version": "2.3.3",
+   "filepath": "vph-components/OS/OSsomething.zip",
+   "name": "OS",
+   "description": "OS",
+   "id": 7,
+   "version": "2.9.0"
+  },
+  {
+   "filepath": "vph-components/captive-portal/mifi-v1.0.0.zip",
+   "name": "Captive Portal",
+   "description": "Captive Portal",
+   "id": 100,
+   "version": "1.0.0"
+  },
+  {
+   "filepath": "vph-components/web-server/WebServer-v2.2.2.apk",
+   "name": "WEB SERVER",
+   "description": "WEB SERVER",
+   "id": 104,
+   "version": "2.2.2"
+  }
+ ],
+ "bucket_key": "TBD",
+ "name": "2.9.0",
+ "action": 4,
+ "package version": "2.9.0",
+ "version": "2.9.0"
+}
