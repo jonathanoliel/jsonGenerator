@@ -11,6 +11,11 @@
 			<attribute name="module" value="true"/>
 		</attributes>
 	</classpathentry>
+	<classpathentry kind="lib" path="C:/Users/Jonathan/Downloads/controlsfx-9.0.0/controlsfx-9.0.0.jar">
+		<attributes>
+			<attribute name="module" value="true"/>
+		</attributes>
+	</classpathentry>
 	<classpathentry kind="lib" path="C:/Users/Jonathan/Downloads/java-json.jar"/>
 	<classpathentry kind="lib" path="C:/Users/Jonathan/Downloads/gson-2.8.2-javadoc.jar"/>
 	<classpathentry kind="output" path="bin"/>
