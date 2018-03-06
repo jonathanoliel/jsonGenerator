@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="WINDOWS-1252" standalone="no"?>
+<jardesc>
+    <jar path="C:/Users/Jonathan/Desktop/jsonCreator1.jar"/>
+    <options buildIfNeeded="true" compress="true" descriptionLocation="/JsonCreator/desc.jardesc" exportErrors="true" exportWarnings="true" includeDirectoryEntries="false" overwrite="false" saveDescription="true" storeRefactorings="false" useSourceFolders="false"/>
+    <storedRefactorings deprecationInfo="true" structuralOnly="false"/>
+    <selectedProjects/>
+    <manifest generateManifest="true" mainClassHandleIdentifier="=JsonCreator/src&lt;jon{Main.java[Main" manifestLocation="/JsonCreator/manifest" manifestVersion="1.0" reuseManifest="false" saveManifest="true" usesManifest="true">
+        <sealing sealJar="false">
+            <packagesToSeal/>
+            <packagesToUnSeal/>
+        </sealing>
+    </manifest>
+    <selectedElements exportClassFiles="false" exportJavaFiles="true" exportOutputFolder="true">
+        <file path="/JsonCreator/manifest"/>
+        <file path="/JsonCreator/.gitignore"/>
+        <file path="/JsonCreator/.project"/>
+        <file path="/JsonCreator/jon_package.json"/>
+        <file path="/JsonCreator/logo.png"/>
+        <javaElement handleIdentifier="=JsonCreator/src"/>
+        <file path="/JsonCreator/.classpath"/>
+    </selectedElements>
+</jardesc>

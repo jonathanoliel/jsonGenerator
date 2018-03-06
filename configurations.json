@@ -1,0 +1,100 @@
+{
+ "components": [
+  {
+   "filepath": "",
+   "name": "ServersControl",
+   "description": "Server Service",
+   "id": 0,
+   "version": ""
+  },
+  {
+   "filepath": "",
+   "name": "VSimControl",
+   "description": "Vsim services",
+   "id": 1,
+   "version": ""
+  },
+  {
+   "filepath": "",
+   "name": "Atmel",
+   "description": "Atmel",
+   "id": 2,
+   "version": ""
+  },
+  {
+   "filepath": "",
+   "name": "Server 4G",
+   "description": "Server 4G",
+   "id": 3,
+   "version": ""
+  },
+  {
+   "filepath": "",
+   "name": "GUI",
+   "description": "GUI",
+   "id": 4,
+   "version": ""
+  },
+  {
+   "filepath": "",
+   "name": "Log Service",
+   "description": "Log Service",
+   "id": 5,
+   "version": ""
+  },
+  {
+   "filepath": "",
+   "name": "AP-Configuration",
+   "description": "Configurations",
+   "id": 6,
+   "version": ""
+  },
+  {
+   "base_version": "",
+   "filepath": "vph-components/OS/",
+   "name": "OS",
+   "description": "OS",
+   "id": 7,
+   "version": ""
+  },
+  {
+   "filepath": "",
+   "name": "Captive Portal",
+   "description": "Captive Portal",
+   "id": 100,
+   "version": ""
+  },
+  {
+   "filepath": "",
+   "name": "Gui-Configurations",
+   "description": "Gui-Configurations",
+   "id": 101,
+   "version": ""
+  },
+  {
+   "filepath": "",
+   "name": "Telephony DB",
+   "description": "Telephony DB",
+   "id": 102,
+   "version": ""
+  },
+  {
+   "filepath": "",
+   "name": "APN",
+   "description": "APN",
+   "id": 103,
+   "version": ""
+  },
+  {
+   "filepath": "",
+   "name": "WEB SERVER",
+   "description": "WEB SERVER",
+   "id": 104,
+   "version": ""
+  }
+ ],
+ "package_version": "",
+ "name": "",
+ "action": "",
+ "version": ""
+}
